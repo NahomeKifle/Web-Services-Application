@@ -29,7 +29,7 @@ def get_cart(user_id):
 @app.route('/cart/<int:user_id>/add/<int:product_id>', methods=['POST'])
 def add_product(user_id, product_id):
     
-    response = requests.get(f'http://127.0.0.1:5000/products/{product_id}')
+    response = requests.get(f'https://assingment-2-rest-apis-nahomekifle.onrender.com/products/{product_id}')
 
     if response.status_code != 200:
         return jsonify({"error": "Product not found"}), 404
@@ -63,7 +63,7 @@ def add_product(user_id, product_id):
 
     
     updated_quantity = available_quantity - quantity_to_add
-    requests.put(f'http://127.0.0.1:5000/products/{product_id}', json={"quantity": updated_quantity})
+    requests.put(f'https://assingment-2-rest-apis-nahomekifle.onrender.com/products/{product_id}', json={"quantity": updated_quantity})
 
     return jsonify({"message": "Product added to cart", "product": product_data, "quantity_added": quantity_to_add}), 201
 
@@ -72,7 +72,6 @@ def remove_product_quantity(user_id, product_id):
     data = request.get_json()
     quantity_to_remove = data.get('quantity', 1)  
 
-    # Step 1: Find the product in the user's cart
     product_in_cart = Cart.query.filter_by(user_id=user_id, product_id=product_id).first()
 
     if not product_in_cart:
@@ -89,7 +88,7 @@ def remove_product_quantity(user_id, product_id):
     else:
         db.session.add(product_in_cart)
 
-    response = requests.get(f'http://127.0.0.1:5000/products/{product_id}')
+    response = requests.get(f'https://assingment-2-rest-apis-nahomekifle.onrender.com/products/{product_id}')
     if response.status_code != 200:
         return jsonify({"error": "Product not found in inventory"}), 404
     
@@ -98,7 +97,7 @@ def remove_product_quantity(user_id, product_id):
         return jsonify({"error": "Product not found in inventory"}), 404
 
     updated_quantity = product_data['quantity'] + quantity_to_remove
-    update_response = requests.put(f'http://127.0.0.1:5000/products/{product_id}', json={"quantity": updated_quantity})
+    update_response = requests.put(f'https://assingment-2-rest-apis-nahomekifle.onrender.com/products/{product_id}', json={"quantity": updated_quantity})
 
     if update_response.status_code != 200:
         return jsonify({"error": "Failed to update product quantity"}), 500
